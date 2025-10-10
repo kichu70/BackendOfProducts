@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator"
 import Product from "../models/product.js"
 
 
@@ -18,8 +19,22 @@ export const allproduct = async(req,res)=>{
 // ------------AddProduct------------------------
 export const AddProduct =async(req,res)=>{
     try{
-
         const { title, description, price,user} = req.body
+
+        const errors =validationResult(req)
+        if(!errors.isEmpty()){
+            const FieldErrors ={};
+            errors.array().forEach(err=>{
+                const key = err.path;
+                FieldErrors[key]=err.msg;
+            })
+            return res.status(400).json({
+                message:"feild messing",
+                msg:FieldErrors
+            })
+        }
+
+
         const newProduct =await Product.create({title,description,price,user})
 
 
@@ -34,10 +49,26 @@ export const AddProduct =async(req,res)=>{
 }
 
 // ---------------EditPrductById------------------
-export const EditProduct =async (req,res)=>{
+export const UpdateProduct =async (req,res)=>{
     try{
         const{id}=req.params;
         const {title,description,price}=req.body
+
+        const errors =validationResult(req);
+
+        // if(!errors.isEmpty()){
+        //     const FieldErrors={};
+        //     errors.array().forEach(err=>{
+        //         const key =err.path;
+        //         FieldErrors[key]=err.msg
+        //     })
+        //     return res.status(400).json({
+        //         message:"fields are missing",
+        //         msg:FieldErrors
+        //     })
+        // }
+
+
         const UpdatedProduct =await Product.findByIdAndUpdate(id,{title,description,price},{
             new:true,
             runValidators:true

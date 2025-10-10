@@ -17,13 +17,20 @@ export const AddUser = async (req, res) => {
 
 
     const errors =validationResult(req);
+    // console.log("aaaaaaaaa",req)
     if(!errors.isEmpty()){
       const FieldErrors ={};
       errors.array().forEach(err=>{
-       FieldErrors[err.param]= err.msg;
-       console.log(err.param)
+        console.log(err, 'err*************')
+        const key = err.path;
+        console.log(key, 'key*********')
+       FieldErrors[key]= err.msg;
+
       })
-      return res.status(400).json({msg:FieldErrors })
+      return res.status(400).json({
+        message: 'field missing',
+        msg:FieldErrors
+      })
     }
 
     
