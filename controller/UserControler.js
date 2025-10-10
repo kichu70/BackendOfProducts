@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import users from "../models/UsersSche.js";
+import bcrypt from "bcryptjs";
 
 export const AllUserdata = async (req, res) => {
   try {
@@ -33,12 +34,14 @@ export const AddUser = async (req, res) => {
       })
     }
 
-    
+    const hashedPassword = await bcrypt.hash(password,10)//used to hash password decription
+
+
     const existingUser = await users.findOne({ email });
     if (existingUser) {
       return res.status(404).json({ message: "email already existed" });
     }
-    const newUser = await users.create({ username, password, email });
+    const newUser = await users.create({ username, password:hashedPassword, email });
     res.status(201).json({ message: "data added", data: newUser });
   } catch (err) {   
     console.error(err, "server error");
@@ -82,3 +85,49 @@ export const UpdateUser = async (req, res) => {
     res.status(500).json({ message: "server is error to do update" });
   }
 };
+
+
+
+export const Login =async(req,res)=>{
+  const{email,username,password}=req.body
+
+  const errors = validationResult(req)
+
+  if(!errors.isEmpty()){
+    const FieldErrors={};
+    errors.array().forEach((err)=>{
+      const key =err.path
+      FieldErrors[key]=err.msg;
+    })
+    res.status(400).json({
+      message:"feild missing",
+      msg:FieldErrors
+    })
+  }
+
+  const user = await users.findOne({$or:[{email:email},{username:username}]})
+  if(!user){
+    console.log("user not found")
+    return res.status(400).json({message:"no user found"})
+  }
+  const stored = user.password;
+  const checkingHashed = /^\$2[aby]\$\d{2}\$/.test(stored);
+  let isMatch= false;
+  if(checkingHashed){
+     isMatch = await bcrypt.compare(password,user.password)
+  }
+  else{
+    isMatch = password === stored
+  }
+
+
+
+  if(isMatch){
+    res.json({message:"login successful"
+    })
+  }
+  else{
+    res.status(401).json({message:"Invalid password"})
+  }
+
+}
