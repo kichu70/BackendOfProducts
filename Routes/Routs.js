@@ -6,9 +6,9 @@ const router = express.Router();
 // ---------------product-------------
 
 router.get("/",allproduct)
-router.post("/addProduct",AddProduct)
-router.put("/updateProduct/:id",EditProduct)
-router.delete("/delete/:id",DeletProduct)
+router.post("/add-product",AddProduct)
+router.put("/update-product/:id",EditProduct)
+router.put("/delete-product/:id",DeletProduct)
 
 
 

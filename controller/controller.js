@@ -5,21 +5,22 @@ import Product from "../models/product.js"
 
 // ---------viewAllProduct--------------------
 export const allproduct = async(req,res)=>{
-    try{
-        const data =await Product.find()
-        res.json(data)
-    }
-    catch(err){
-        console.log(err)
-    }
-}
 
+        
+        try{
+            const data =await Product.find({isDeleted:false})
+            res.json(data)
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
 // ------------AddProduct------------------------
 export const AddProduct =async(req,res)=>{
     try{
 
-        const { title, description, price } = req.body
-        const newProduct =await Product.create({title,description,price})
+        const { title, description, price,user} = req.body
+        const newProduct =await Product.create({title,description,price,user})
 
 
         res.status(201).json({
@@ -59,8 +60,10 @@ export const EditProduct =async (req,res)=>{
 export const DeletProduct =async(req,res)=>{
     const {id}=req.params;
     try{
-        const dltProduct=await Product.findByIdAndDelete(id);
-    
+        // const dltProduct=await Product.findByIdAndDelete(id); 
+        // this will delet from db so the admin cant see to avoid that we make the is delet as false
+        const dltProduct =await Product.findByIdAndUpdate(id,{isDeleted:true})
+
         if(!dltProduct){
             return res.status(404).json({message:"page Not Found"})
         }

@@ -12,6 +12,15 @@ const productScheme = new mongoose.Schema({
     price:{
         type:Number,
         required:true
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
+    },
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'userData',
+        required: true
     }
 }, {
     timestamps : true

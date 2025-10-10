@@ -15,7 +15,11 @@ const UserSchema = new mongoose.Schema({
         unique:true,
         lowercase:true,
         trim:true
-    }
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
+    },
 },{
     timestamps:true
 })

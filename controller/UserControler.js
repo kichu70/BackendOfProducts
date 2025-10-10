@@ -2,7 +2,7 @@ import users from "../models/UsersSche.js";
 
 export const AllUserdata = async (req, res) => {
   try {
-    const data = await users.find();
+    const data = await users.find({isDeleted:false});
     res.status(201).json({ message: "data getted", data: data });
   } catch (err) {
     console.error(err, "data of user not getted");
@@ -42,7 +42,10 @@ export const AddUser = async (req, res) => {
 export const DeletUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const dltuser = await users.findByIdAndDelete(id);
+    // const dltuser = await users.findByIdAndDelete(id); 
+    // same as the product case go and read there
+    const dltuser =await users.findByIdAndUpdate(id,{isDeleted:true})
+
     if (!dltuser) {
       return res.status(404).json({ message: "page not found" });
     }
