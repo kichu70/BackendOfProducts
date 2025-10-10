@@ -1,3 +1,4 @@
+import { validationResult } from "express-validator";
 import users from "../models/UsersSche.js";
 
 export const AllUserdata = async (req, res) => {
@@ -14,18 +15,17 @@ export const AddUser = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
-    if(!username || !password || !email){
-        return res.status(404).json("All Feilds Are Reqierd !!")
-    }
-    const passwordPattern =/^[A-Za-z].{8,}$/;
-    if(!passwordPattern.test(password)){
-        return res.status(404).json({message:"password must start with a letter and need minmum 8 charecter"})
+
+    const errors =validationResult(req);
+    if(!errors.isEmpty()){
+      const FieldErrors ={};
+      errors.array().forEach(err=>{
+       FieldErrors[err.param]= err.msg;
+       console.log(err.param)
+      })
+      return res.status(400).json({msg:FieldErrors })
     }
 
-    const emailPattern =/^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if(!emailPattern.test(email)){
-        return res.status(404).json({message:"it not a email format"})
-    }
     
     const existingUser = await users.findOne({ email });
     if (existingUser) {
@@ -47,7 +47,7 @@ export const DeletUser = async (req, res) => {
     const dltuser =await users.findByIdAndUpdate(id,{isDeleted:true})
 
     if (!dltuser) {
-      return res.status(404).json({ message: "page not found" });
+      return res.status(404).json({ message: "user not exist" });
     }
     res.status(201).json({ message: "data deleted", data: dltuser });
   } catch (err) {
