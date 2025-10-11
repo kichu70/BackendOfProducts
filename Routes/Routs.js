@@ -1,11 +1,13 @@
 import express from 'express'
 import {  allproduct, AddProduct, DeletProduct, UpdateProduct } from "../controller/controller.js";
 import { check } from 'express-validator';
-
+import { verifyToken } from '../JWT/verifyToken.js';
+import dotenv from "dotenv"
 const router = express.Router();
 
+dotenv.config()
 // ---------------product-------------
-
+router.use(verifyToken)
 router.get("/",allproduct)
 router.post("/add-product",[
     check("title")
@@ -21,6 +23,7 @@ router.post("/add-product",[
 ],AddProduct)
 
 router.put("/update-product/:id",UpdateProduct)
+
 // router.put("/update-product/:id",[
 //         check("title")
 //         .notEmpty().withMessage("title must contain")

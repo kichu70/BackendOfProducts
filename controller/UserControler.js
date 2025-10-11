@@ -1,6 +1,10 @@
+import dotenv from "dotenv"
 import { validationResult } from "express-validator";
 import users from "../models/UsersSche.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+dotenv.config()
 
 export const AllUserdata = async (req, res) => {
   try {
@@ -70,7 +74,8 @@ export const UpdateUser = async (req, res) => {
   try {
     const { id } = req.params;
     const { username, password} = req.body;
-    const update = await users.findByIdAndUpdate(id, { username, password });
+    const hashedPassword = await bcrypt.hash(password,10)
+    const update = await users.findByIdAndUpdate(id, { username, password:hashedPassword });
     if (!update) {
       return res.status(404).json({ message: "no user found" });
     }
@@ -120,10 +125,13 @@ export const Login =async(req,res)=>{
     isMatch = password === stored
   }
 
-
-
   if(isMatch){
+    const token =jwt.sign(
+      {id:user._id,username:user.username},process.env.JWT_SECRET
+    )
     res.json({message:"login successful"
+      ,token
+      ,user:{id:user._id,username:user.username,email:user.email},
     })
   }
   else{
