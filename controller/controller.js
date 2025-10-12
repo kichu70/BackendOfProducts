@@ -7,8 +7,8 @@ import Product from "../models/product.js"
 // ---------viewAllProduct--------------------
 export const allproduct = async(req,res)=>{
 
-        
-        try{
+    try{
+            console.log(req.user)
             const data =await Product.find({isDeleted:false})
             res.json(data)
         }
@@ -16,6 +16,22 @@ export const allproduct = async(req,res)=>{
             console.log(err)
         }
     }
+
+
+// ---------------view product of user------------
+
+export const productsOfUser =async(req,res)=>{
+    try{
+        const userId=req.user.id
+        const data = await Product.find({user:userId})
+        res.json(data)
+    }
+    catch(err){
+        return res.json({message:"no products",data:userId})
+    }
+}
+
+
 // ------------AddProduct------------------------
 export const AddProduct =async(req,res)=>{
     try{
@@ -56,19 +72,6 @@ export const UpdateProduct =async (req,res)=>{
         const{id}=req.params;
         const {title,description,price}=req.body
 
-        const errors =validationResult(req);
-
-        // if(!errors.isEmpty()){
-        //     const FieldErrors={};
-        //     errors.array().forEach(err=>{
-        //         const key =err.path;
-        //         FieldErrors[key]=err.msg
-        //     })
-        //     return res.status(400).json({ 
-        //         message:"fields are missing",
-        //         msg:FieldErrors
-        //     })
-        // }
 
 
         const UpdatedProduct =await Product.findByIdAndUpdate(id,{title,description,price},{

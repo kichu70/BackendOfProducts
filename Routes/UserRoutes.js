@@ -31,30 +31,30 @@ router.post(
   Login
 );
 
-router.use(verifyToken);
 
-router.get("/", AllUserdata);
 router.post(
   "/add-user",
   [
     check("username")
-      .notEmpty()
-      .withMessage("username must Required")
-      .isLength({ min: 3 })
-      .withMessage("name must contain at least 3 charecters"),
+    .notEmpty()
+    .withMessage("username must Required")
+    .isLength({ min: 3 })
+    .withMessage("name must contain at least 3 charecters"),
     check("password")
-      .notEmpty()
-      .withMessage("Password is Reqierd")
-      .isLength({ min: 8 })
-      .withMessage("must contain atleast 8 charecter"),
+    .notEmpty()
+    .withMessage("Password is Reqierd")
+    .isLength({ min: 8 })
+    .withMessage("must contain atleast 8 charecter"),
     check("email")
-      .notEmpty()
-      .withMessage("Email required")
-      .isEmail()
-      .withMessage("Invalid email format"),
+    .notEmpty()
+    .withMessage("Email required")
+    .isEmail()
+    .withMessage("Invalid email format"),
   ],
   AddUser
 );
+router.get("/", AllUserdata);
+router.use(verifyToken);
 router.put("/delete-user/:id", DeletUser);
 router.put("/update-user/:id", UpdateUser);
 
