@@ -21,6 +21,8 @@ export const AddProduct =async(req,res)=>{
     try{
         const { title, description, price,user} = req.body
 
+        const userId = req.user.id
+
         const errors =validationResult(req)
         if(!errors.isEmpty()){
             const FieldErrors ={};
@@ -35,7 +37,7 @@ export const AddProduct =async(req,res)=>{
         }
 
 
-        const newProduct =await Product.create({title,description,price,user})
+        const newProduct =await Product.create({title,description,price,user:userId})
 
 
         res.status(201).json({
@@ -62,7 +64,7 @@ export const UpdateProduct =async (req,res)=>{
         //         const key =err.path;
         //         FieldErrors[key]=err.msg
         //     })
-        //     return res.status(400).json({
+        //     return res.status(400).json({ 
         //         message:"fields are missing",
         //         msg:FieldErrors
         //     })

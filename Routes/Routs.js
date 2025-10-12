@@ -1,11 +1,12 @@
+import dotenv from "dotenv"
+dotenv.config()
+
 import express from 'express'
 import {  allproduct, AddProduct, DeletProduct, UpdateProduct } from "../controller/controller.js";
 import { check } from 'express-validator';
 import { verifyToken } from '../JWT/verifyToken.js';
-import dotenv from "dotenv"
 const router = express.Router();
 
-dotenv.config()
 // ---------------product-------------
 router.use(verifyToken)
 router.get("/",allproduct)
@@ -17,8 +18,8 @@ router.post("/add-product",[
         .notEmpty().withMessage("please give the price"),
     check("description")
         .notEmpty().withMessage("must need a description"),
-    check("user")
-        .notEmpty().withMessage("user id required")
+    // check("user")
+    //     .notEmpty().withMessage("user id required")
 
 ],AddProduct)
 

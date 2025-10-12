@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const verifyToken =(req,res,next)=>{
     const authHeader =req.headers.authorization;
@@ -14,7 +16,7 @@ export const verifyToken =(req,res,next)=>{
         next(); 
     }
     catch(err){
-        console.error(err,"error is found on creating token")
         res.status(401).json({message:"expaired token"})
+        console.error(err,"error is found on creating token")
     }
 }

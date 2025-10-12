@@ -1,5 +1,6 @@
-import http from 'http'
 import dotenv from 'dotenv'
+dotenv.config()
+import http from 'http'
 import Connect from "./connect/connet.js"
 import express from "express"
 import router from './Routes/Routs.js'
@@ -14,7 +15,6 @@ const app = express();
 const server = http.createServer(app)
 app.use(express.json())
 app.use(cors())
-dotenv.config()
 
 // --------mongoos connection calling from  connect.js---
 Connect;
