@@ -17,7 +17,7 @@ const router = express.Router();
 router.post(
   "/login",
   [
-    check("username")
+    check("email")
       .notEmpty()
       .withMessage("username must Required")
       .isLength({ min: 3 })
