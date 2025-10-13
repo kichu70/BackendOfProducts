@@ -71,11 +71,11 @@ export const UpdateProduct =async (req,res)=>{
     try{
         const{id}=req.query;
         const userId=  req.user.id
-        const data1 =await Product.find({user:userId,_id:id,isDeleted:false})
-
-        if(data1 !== id){
+        const data =await Product.find({user:userId,_id:id,isDeleted:false})
+        const data1 =data.find(p=>p.id===id)
+        if(!data1){
             console.log("cant access")
-            return res.json({message:"can't update the product"})
+            return res.json({message:"can't update the product",id,data:data1})
         }
 
         const {title,description,price}=req.body
@@ -104,7 +104,7 @@ export const DeletProduct =async(req,res)=>{
         const userId =req.user.id
         const data = await Product.findOne({user:userId,_id:id,isDeleted:false})
         if(!data){
-            return res.status(404).json({message:"cant delet product",data:data._id,id})
+            return res.status(404).json({message:"cant delet product",id})
         }
 
 
