@@ -23,7 +23,7 @@ export const allproduct = async(req,res)=>{
 export const productsOfUser =async(req,res)=>{
     try{
         const userId=req.user.id
-        const data = await Product.find({user:userId})
+        const data = await Product.find({user:userId,isDeleted:false})
         res.json(data)
     }
     catch(err){
@@ -70,9 +70,15 @@ export const AddProduct =async(req,res)=>{
 export const UpdateProduct =async (req,res)=>{
     try{
         const{id}=req.query;
-        const {title,description,price}=req.body
+        const userId=  req.user.id
+        const data1 =await Product.find({user:userId,_id:id,isDeleted:false})
 
-        
+        if(data1 !== id){
+            console.log("cant access")
+            return res.json({message:"can't update the product"})
+        }
+
+        const {title,description,price}=req.body
         const UpdatedProduct =await Product.findByIdAndUpdate(id,{title,description,price},{
             new:true
         })
@@ -93,8 +99,16 @@ export const UpdateProduct =async (req,res)=>{
 
 // --------------DeleteProductById-------------
 export const DeletProduct =async(req,res)=>{
-    const {id}=req.query;
     try{
+        const {id}=req.query;
+        const userId =req.user.id
+        const data = await Product.findOne({user:userId,_id:id,isDeleted:false})
+        if(!data){
+            return res.status(404).json({message:"cant delet product",data:data._id,id})
+        }
+
+
+
         // const dltProduct=await Product.findByIdAndDelete(id); 
         // this will delet from db so the admin cant see to avoid that we make the is delet as false
         const dltProduct =await Product.findByIdAndUpdate(id,{isDeleted:true})
