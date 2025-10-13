@@ -16,7 +16,7 @@ export const verifyToken =(req,res,next)=>{
         next(); 
     }
     catch(err){
-        res.status(401).json({message:"expaired token"})
+        res.status(401).json({message:"acces denied"})
         console.error(err,"error is found on creating token")
     }
 }

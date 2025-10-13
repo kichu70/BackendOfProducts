@@ -54,11 +54,15 @@ export const AddUser = async (req, res) => {
 };
 
 export const DeletUser = async (req, res) => {
-  const { id } = req.query;
+  // const { id } = req.query;
   try {
     // const dltuser = await users.findByIdAndDelete(id); 
     // same as the product case go and read there
-    const dltuser =await users.findByIdAndUpdate(id,{isDeleted:true})
+    const userId= req.user.id
+    if(!userId){
+      return res.status(404).json({message:"no user found"})
+    }
+    const dltuser =await users.findByIdAndUpdate(userId,{isDeleted:true})
 
     if (!dltuser) {
       return res.status(404).json({ message: "user not exist" });
@@ -72,17 +76,24 @@ export const DeletUser = async (req, res) => {
 
 export const UpdateUser = async (req, res) => {
   try {
-    const { id } = req.query;
+    // const { id } = req.query;
+    const userId =req.user.id
+
+
+    if(!userId){
+      return res.status(404).json({message:"user not found!!"})
+    }
+   
     const { username, password} = req.body;
     const hashedPassword = await bcrypt.hash(password,10)
-    const update = await users.findByIdAndUpdate(id, { username, password:hashedPassword });
+    const update = await users.findByIdAndUpdate(userId,{ username, password:hashedPassword });
     if (!update) {
       return res.status(404).json({ message: "no user found" });
     }
 
-    const passwordPattern =/^[A-Za-z].{7,}$/
+    const passwordPattern =/^.{7,}$/
     if(!passwordPattern.test(password)){
-        return res.status(404).json({message:"password must contain 8 charecters and start with any letter !!"})
+        return res.status(404).json({message:"password must contain 8 charecters "})
     }
     res.status(201).json({ message: "data have been updated", data: update });
   } catch (err) {
