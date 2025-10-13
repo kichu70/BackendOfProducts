@@ -8,8 +8,10 @@ import { verifyToken } from '../JWT/verifyToken.js';
 const router = express.Router();
 
 // ---------------product-------------
-router.use(verifyToken)
 router.get("/",allproduct)
+
+router.use(verifyToken)
+
 router.get("/usersProdect",productsOfUser)
 router.post("/add-product",[
     check("title")
@@ -22,10 +24,11 @@ router.post("/add-product",[
    
 ],AddProduct)
 
-router.put("/update-product/:id",UpdateProduct)
+router.put("/update-product",UpdateProduct)
 
 
-router.put("/delete-product/:id",DeletProduct)
+router.put("/delete-product",DeletProduct)
+//i have removed the id from the url now i need to change the req.body to req.query in controller.js too
 
 
 

@@ -69,17 +69,16 @@ export const AddProduct =async(req,res)=>{
 // ---------------EditPrductById------------------
 export const UpdateProduct =async (req,res)=>{
     try{
-        const{id}=req.params;
+        const{id}=req.query;
         const {title,description,price}=req.body
 
-
-
+        
         const UpdatedProduct =await Product.findByIdAndUpdate(id,{title,description,price},{
-            new:true,
-            runValidators:true
+            new:true
         })
         if(!UpdatedProduct){
             return res.status(404).json({message:"product not found"})
+
         }
         res.status(200).json({message:"Product Updated",
             data:UpdatedProduct
@@ -94,7 +93,7 @@ export const UpdateProduct =async (req,res)=>{
 
 // --------------DeleteProductById-------------
 export const DeletProduct =async(req,res)=>{
-    const {id}=req.params;
+    const {id}=req.query;
     try{
         // const dltProduct=await Product.findByIdAndDelete(id); 
         // this will delet from db so the admin cant see to avoid that we make the is delet as false

@@ -55,7 +55,7 @@ router.post(
 );
 router.get("/", AllUserdata);
 router.use(verifyToken);
-router.put("/delete-user/:id", DeletUser);
-router.put("/update-user/:id", UpdateUser);
+router.put("/delete-user", DeletUser);
+router.put("/update-user", UpdateUser);
 
 export default router;

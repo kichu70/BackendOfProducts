@@ -54,7 +54,7 @@ export const AddUser = async (req, res) => {
 };
 
 export const DeletUser = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.query;
   try {
     // const dltuser = await users.findByIdAndDelete(id); 
     // same as the product case go and read there
@@ -72,7 +72,7 @@ export const DeletUser = async (req, res) => {
 
 export const UpdateUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.query;
     const { username, password} = req.body;
     const hashedPassword = await bcrypt.hash(password,10)
     const update = await users.findByIdAndUpdate(id, { username, password:hashedPassword });
@@ -129,9 +129,10 @@ export const Login =async(req,res)=>{
     const token =jwt.sign(
       {id:user._id,username:user.username},process.env.JWT_SECRET
     )
+    const userdata ={id:user._id,username:user.username,email:user.email}
     res.json({message:"login successful"
-      ,token
-      ,user:{id:user._id,username:user.username,email:user.email},
+      ,Accestoken:token
+      ,user:userdata,
     })
   }
   else{
