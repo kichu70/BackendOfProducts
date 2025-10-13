@@ -121,7 +121,7 @@ export const Login =async(req,res)=>{
     })
   }
 
-  const user = await users.findOne({$or:[{email:email},{username:username}]})
+  const user = await users.findOne({$or:[{email:email},{username:username}],isDeleted:false})
   if(!user){
     console.log("user not found")
     return res.status(400).json({message:"no user found"})
