@@ -6,6 +6,7 @@ import express from "express"
 import router from './Routes/Routs.js'
 import cors from "cors"
 import userRoutes from "./Routes/UserRoutes.js"
+import path from "path";
 
 
 
@@ -19,7 +20,7 @@ app.use(cors())
 // --------mongoos connection calling from  connect.js---
 Connect;
 
-
+app.use("/uploads",express.static(path.join(process.cwd(),"uploads")))
 app.use("/product",router)
 app.use("/user", userRoutes);
 

@@ -52,8 +52,18 @@ export const AddProduct =async(req,res)=>{
             })
         }
 
-
-        const newProduct =await Product.create({title,description,price,user:userId})
+        if (!req.file) 
+        {
+            return res.status(400).json({ message: "Image is required" });
+        }
+        
+        const newProduct =await Product.create({
+            title,
+            description,
+            price,
+            user:userId,
+            image:req.file.path
+        })
 
 
         res.status(201).json({
@@ -107,8 +117,6 @@ export const DeletProduct =async(req,res)=>{
             return res.status(404).json({message:"cant delet product",id})
         }
 
-
-
         // const dltProduct=await Product.findByIdAndDelete(id); 
         // this will delet from db so the admin cant see to avoid that we make the is delet as false
         const dltProduct =await Product.findByIdAndUpdate(id,{isDeleted:true})
@@ -126,3 +134,5 @@ export const DeletProduct =async(req,res)=>{
         res.status(500).json({message:"Server Error",error:err.message})
     }
 }
+
+
