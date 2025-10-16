@@ -73,7 +73,7 @@ export const UpdateProduct =async (req,res)=>{
         const userId=  req.user.id
         const data =await Product.find({user:userId,_id:id,isDeleted:false})
         const data1 =data.find(p=>p.id===id)
-        if(data1){
+        if(!data1){
             console.log("cant access")
             return res.json({message:"can't update the product",id,data:data1})
         }
