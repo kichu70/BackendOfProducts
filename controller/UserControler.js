@@ -22,13 +22,10 @@ export const AddUser = async (req, res) => {
 
 
     const errors =validationResult(req);
-    // console.log("aaaaaaaaa",req)
     if(!errors.isEmpty()){
       const FieldErrors ={};
       errors.array().forEach(err=>{
-        console.log(err, 'err*************')
         const key = err.path;
-        console.log(key, 'key*********')
        FieldErrors[key]= err.msg;
 
       })
@@ -49,7 +46,7 @@ export const AddUser = async (req, res) => {
     res.status(201).json({ message: "data added", data: newUser });
   } catch (err) {   
     console.error(err, "server error");
-    res.status(500).json("server error");
+    res.status(500).json("server error",err);
   }
 };
 

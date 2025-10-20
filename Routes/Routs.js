@@ -14,7 +14,11 @@ router.get("/",allproduct)
 router.use(verifyToken)
 
 router.get("/usersProdect",productsOfUser)
-router.post("/add-product",upload.single("image"),[//the image is multer middlerware
+router.post("/add-product",
+    // upload.single("image")
+    // //the image is multer middlerware
+    upload.array("image", 10),//this is used for multuple img uploade 
+    [
     check("title")
         .notEmpty().withMessage("title must contain")
         .isLength({min:3}).withMessage("length need morethan 3 character"),

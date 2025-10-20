@@ -8,11 +8,25 @@ import Product from "../models/product.js"
 export const allproduct = async(req,res)=>{
 
     try{
-            console.log(req.user)
+
+            const page=parseInt(req.query.page)||1;
+            const limit=parseInt(req.query.limit)||4;
+
+            const skip =(page - 1)* limit;
+
+            const total=await Product.countDocuments({isDeleted:false});
+
             const data =await Product.find({isDeleted:false})
-            res.json(data)
+            .skip(skip)
+            .limit(limit)
+            res.json({
+                page,
+                totalPage:Math.ceil(total/limit),
+                totalIteam:total,
+                products:data
+            })
         }
-        catch(err){
+        catch(err){ 
             console.log(err)
         }
     }
@@ -52,17 +66,21 @@ export const AddProduct =async(req,res)=>{
             })
         }
 
-        if (!req.file) 
-        {
-            return res.status(400).json({ message: "Image is required" });
+        // if (!req.file) 
+        // {
+        //     return res.status(400).json({ message: "Image is required" });
+        // }  is used for single image uploade
+        if(!req.files ||req.files.length===0){
+            return res.status(400).json({message:"At least one image is required"})
         }
+        const imagePaths = req.files.map(file => file.path)//make this line for multiple img and call this on new product
         
         const newProduct =await Product.create({
             title,
             description,
             price,
             user:userId,
-            image:req.file.path
+            image:imagePaths
         })
 
 

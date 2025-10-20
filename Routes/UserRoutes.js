@@ -46,10 +46,10 @@ router.post(
     .isLength({ min: 8 })
     .withMessage("must contain atleast 8 charecter"),
     check("email")
+    .isEmail()
+    .withMessage("Invalid email format")
     .notEmpty()
     .withMessage("Email required")
-    .isEmail()
-    .withMessage("Invalid email format"),
   ],
   AddUser
 );
